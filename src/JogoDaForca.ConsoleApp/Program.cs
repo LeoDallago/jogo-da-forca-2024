@@ -1,13 +1,17 @@
-﻿namespace JogoDaForca.ConsoleApp
+﻿
+namespace JogoDaForca.ConsoleApp
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            GeraPalavra(out string palavraSelecionada, out char[] separaPalavra);
 
-            int tentativas = 5;
-            int pontos = 0;
+            JogoVelha novoJogo = new();
+
+            novoJogo.GeraPalavra(out string palavraSelecionada, out char[] separaPalavra);
+
+            novoJogo.tentativas = 5;
+            novoJogo.pontos = 0;
 
             char[] mostraLetra = new char[separaPalavra.Length];
             for (int i = 0; i < mostraLetra.Length; i++)
@@ -16,11 +20,11 @@
             }
 
 
-            while (tentativas > 0)
+            while (novoJogo.tentativas > 0)
             {
                 Console.Clear();
-                Console.WriteLine($" Bem-Vindo(a) ao Jogo da Forca {System.Environment.MachineName}");
-                FazDesenho(tentativas, mostraLetra);
+                Console.WriteLine($" Bem-Vindo(a) ao Jogo da Forca {Environment.MachineName}");
+                novoJogo.FazDesenho(novoJogo.tentativas, mostraLetra);
 
                 Console.WriteLine("Digite uma letra: ");
                 char letraUser = Convert.ToChar(Console.ReadLine());
@@ -35,44 +39,36 @@
                     {
                         mostraLetra[i] = letraUserMaiscula;
                         aux++;
-                        pontos++;
+                        novoJogo.pontos++;
                     }
                 }
 
                 if (aux == 0)
                 {
-                    tentativas--;
+                    novoJogo.tentativas--;
                 }
 
-                if (pontos == separaPalavra.Length)
+                if (novoJogo.pontos == separaPalavra.Length)
                 {
-                    Console.WriteLine("GAME WIN!!!!!");
-                    Console.WriteLine($"Parabens {System.Environment.MachineName}");
-                    Console.ReadLine();
+                    novoJogo.GameWin(separaPalavra);
                     break;
                 }
 
             }
-            if (tentativas == 0)
+            if (novoJogo.tentativas == 0)
             {
-                Console.Clear();
-                Console.WriteLine("____________________" +
-                                "\n|/                 o" +
-                                "\n|                 |x|" +
-                                "\n|                  x" +
-                                "\n|                   " +
-                                "\n|                   " +
-                                "\n|                   " +
-                                "\n|_________          ");
-                Console.WriteLine("GAME OVER!!!!");
-                Console.WriteLine($"A Palavra era {new string(separaPalavra)}");
-                Console.WriteLine($"Mais sorte da proxima vez {System.Environment.MachineName}");
-                Console.ReadLine();
+                novoJogo.GameOver(separaPalavra);
             }
-
         }
 
-        private static void GeraPalavra(out string palavraSelecionada, out char[] separaPalavra)
+    }
+
+    public class JogoVelha
+    {
+        public int tentativas;
+        public int pontos;
+
+        public void GeraPalavra(out string palavraSelecionada, out char[] separaPalavra)
         {
             Random aleatorio = new Random();
             string[] frutas = ["ABACATE","ABACAXI","ACEROLA","ACAI","ARACA","BACABA","BACURI","BANANA","CAJU","CARAMBOLA","CUPUACU","GRAVIOLA","GOIABA","JABUTICABA","JENIPAPO","MACA","MANGABA","MANGA","MARACUJA","MURICI","PEQUI",
@@ -82,7 +78,7 @@
             separaPalavra = palavraSelecionada.ToCharArray();
         }
 
-        private static void FazDesenho(int tentativas, char[] mostraLetra)
+        public void FazDesenho(int tentativas, char[] mostraLetra)
         {
             switch (tentativas)
             {
@@ -142,6 +138,32 @@
                     Console.WriteLine(new string(mostraLetra));
                     break;
             }
+        }
+
+        public void GameWin(char[] separaPalavra)
+        {
+            Console.Clear();
+            Console.WriteLine(new string(separaPalavra));
+            Console.WriteLine("GAME WIN!!!!!");
+            Console.WriteLine($"Parabens {Environment.MachineName}");
+            Console.ReadLine();
+        }
+
+        public void GameOver(char[] separaPalavra)
+        {
+            Console.Clear();
+            Console.WriteLine("____________________" +
+                            "\n|/                 o" +
+                            "\n|                 |x|" +
+                            "\n|                  x" +
+                            "\n|                   " +
+                            "\n|                   " +
+                            "\n|                   " +
+                            "\n|_________          ");
+            Console.WriteLine("GAME OVER!!!!");
+            Console.WriteLine($"A Palavra era {new string(separaPalavra)}");
+            Console.WriteLine($"Mais sorte da proxima vez {Environment.MachineName}");
+            Console.ReadLine();
         }
     }
 }
